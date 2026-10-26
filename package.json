@@ -1,22 +1,25 @@
 {
   "name": "assignment",
   "version": "0.1.0",
+  "description": "This repository contains an implementation of the serverless web API specified below, and the CDK code to provision its infrastructure for the AWS cloud. However, it is incomplete as there are bugs and missing features.",
+  "homepage": "https://github.com/diarmuidoconnor/cad-assignment-2026#readme",
+  "bugs": {
+    "url": "https://github.com/diarmuidoconnor/cad-assignment-2026/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diarmuidoconnor/cad-assignment-2026.git"
+  },
+  "type": "commonjs",
+  "main": "jest.config.js",
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk"
-  },
-  "devDependencies": {
-    "@swc/core": "^1.15.0",
-    "@swc/jest": "^0.2.39",
-    "@types/aws-lambda": "^8.10.164",
-    "@types/jest": "^30",
-    "@types/node": "^24.10.1",
-    "aws-cdk": "2.1141.0",
-    "jest": "^30",
-    "tsx": "^4.23.0",
-    "typescript": "~7.0.2"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1146.0",
@@ -26,5 +29,17 @@
     "aws-cdk-lib": "^2.268.0",
     "aws-jwt-verify": "^5.2.1",
     "constructs": "^10.5.0"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.15.0",
+    "@swc/jest": "^0.2.39",
+    "@types/aws-lambda": "^8.10.164",
+    "@types/jest": "^30",
+    "@types/node": "^24.10.1",
+    "aws-cdk": "2.1141.0",
+    "jest": "^30",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.0",
+    "typescript": "^5.7.3"
   }
 }
