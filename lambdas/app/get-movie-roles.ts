@@ -1,6 +1,5 @@
 //This is the lambda behind the GET /movies/{movieID}/roles
 
-
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { QueryCommand } from "@aws-sdk/lib-dynamodb";
 import {
@@ -23,7 +22,14 @@ export const handler = async (
   if (movieId === undefined) {
     return response(400, { message: "movieID must be a positive integer" });
   }
-  const actorId = parseId(event.queryStringParameters?.actor);
+  
+  //invalid actor query parameter logic
+  const actorParameter = event.queryStringParameters?.actor;
+  const actorId = parseId(actorParameter);
+  if (actorParameter !== undefined && actorId === undefined) {
+    return response (400, { message: "Actor must be a positive integer"});
+  }
+
   try {
     const queryResult = await ddb.send(
       new QueryCommand({
