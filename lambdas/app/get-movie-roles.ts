@@ -57,7 +57,6 @@ export const handler = async (
     console.error("DynamoDB error:", err);
     return response(500, {
       message: "Internal server error",
-      error: err,
     });
   }
 };

@@ -17,13 +17,12 @@ export const handler = async (
   };
 
   try {
-    //  TOD∏O - Add role if its IDs are valid
+    //  TODO - Add role if its IDs are valid
     return response(201, { message: "Role added", data: role });
   } catch (err) {
     console.error("DynamoDB error:", err);
     return response(500, {
-      message: "Internal server error",
-      error: err,
+      message: "Internal server error"
     });
   }
 };
