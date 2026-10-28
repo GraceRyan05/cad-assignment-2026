@@ -47,6 +47,11 @@ export const handler = async (
     .filter(isRoleItem)
     .map(toRole)
     .filter((role) => actorId === undefined || role.actorId === actorId);
+    if(actorId !== undefined && roles.length === 0) {
+      return response(404, {
+        message: `Actor ${actorId} has no role in movie ${movieId}`,
+      });
+    }
     return response(200, {data: roles});
   } catch (err) {
     console.error("DynamoDB error:", err);
