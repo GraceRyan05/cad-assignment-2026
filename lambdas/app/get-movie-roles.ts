@@ -1,3 +1,6 @@
+//This is the lambda behind the GET /movies/{movieID}/roles
+
+
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import {
@@ -20,6 +23,7 @@ export const handler = async (
   if (movieId === undefined) {
     return response(400, { message: "movieID must be a positive integer" });
   }
+  const actorId = parseId(event.queryStringParameters?.actor);
   try {
     const queryResult = await ddb.send(
       new QueryCommand({
@@ -29,9 +33,12 @@ export const handler = async (
         // ExclusiveStartKey: lastKey,
       })
     );
-
-    const resultItems = queryResult.Items ?? [];
-    return response(200, { data: resultItems.filter(isRoleItem).map(toRole) });
+    const items = queryResult.Items ?? [];
+    const roles = items
+    .filter(isRoleItem)
+    .map(toRole)
+    .filter((role) => actorId === undefined || role.actorId === actorId);
+    return response(200, {data: roles});
   } catch (err) {
     console.error("DynamoDB error:", err);
     return response(500, {
