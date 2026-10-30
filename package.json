@@ -19,7 +19,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "schema": "typescript-json-schema --noExtraProps --required --refs false -o ./shared/types.schema.json \"./shared/types.d.ts\" \"*\""
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1146.0",
@@ -40,6 +41,7 @@
     "jest": "^30",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-json-schema": "^0.68.0"
   }
 }

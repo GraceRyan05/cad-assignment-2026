@@ -11,3 +11,5 @@ cdk.out
 
 /node_modules
 .vscode
+
+*.schema.json
