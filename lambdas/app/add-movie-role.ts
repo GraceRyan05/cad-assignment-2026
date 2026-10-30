@@ -31,6 +31,13 @@ export const handler = async (
           },
         },
         {
+          ConditionCheck: {
+            TableName: tableName,
+            Key: { PK: actorKey(role.actorId), SK: actorKey(role.actorId)},
+            ConditionExpression: "attribute_exists(PK)",
+          }
+        },
+        {
           Put: {
             TableName: tableName,
             Item: { PK: movieKey(role.movieId), SK: actorKey(role.actorId), ...role}
