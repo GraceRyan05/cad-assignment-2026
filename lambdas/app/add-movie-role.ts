@@ -4,7 +4,7 @@ import { actorKey, ddb, movieKey, type Role, tableName, toRole } from "../shared
 import { isResponse, parseJsonObject, response } from "../shared/http";
 import { logRequest } from "../shared/request-logger";
 import Ajv from "ajv";
-import schema from "../../shared/types.schema.json";
+import schema from "../shared/types.schema.json";
 
 const ajv = new Ajv();
 const roleSchema = (schema.definitions as Record<string, object>)["Role"];

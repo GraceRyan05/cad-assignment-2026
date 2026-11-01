@@ -20,7 +20,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "schema": "typescript-json-schema --noExtraProps --required --refs false -o ./shared/types.schema.json \"./shared/types.d.ts\" \"*\""
+    "schema": "typescript-json-schema --noExtraProps --required --refs false -o ./lambdas/shared/types.schema.json \"./lambdas/shared/model.ts\" \"*\""
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.1146.0",
