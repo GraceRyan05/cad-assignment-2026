@@ -1,8 +1,15 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
-import { actorKey, ddb, movieKey, type Role, tableName } from "../shared/db";
+import { actorKey, ddb, movieKey, type Role, tableName, toRole } from "../shared/db";
 import { isResponse, parseJsonObject, response } from "../shared/http";
 import { logRequest } from "../shared/request-logger";
+import Ajv from "ajv";
+import schema from "../../shared/types.schema.json";
+
+const ajv = new Ajv();
+const roleSchema = (schema.definitions as Record<string, object>)["Role"];
+const isValidRolePayload = ajv.compile<Role>(roleSchema || {});
+
 
 export const handler = async (
   event: APIGatewayProxyEvent
@@ -11,12 +18,13 @@ export const handler = async (
   const body = parseJsonObject(event);
   if (isResponse(body)) return body;
 
-  const role: Role = {
-    movieId: body.movieId as number,
-    actorId: body.actorId as number,
-    roleName: body.roleName as string,
-    roleDescription: body.roleDescription as string,
-  };
+  if(!isValidRolePayload(body)) {
+    return response(400, {
+      message: "Incorrect type. Must match the role schema",
+      schema: roleSchema,
+    });
+  }
+  const role = toRole(body);
 
   try {
     
