@@ -5,6 +5,7 @@ import { isResponse, parseJsonObject, response } from "../shared/http";
 import { logRequest } from "../shared/request-logger";
 import Ajv from "ajv";
 import schema from "../shared/types.schema.json";
+import type { TransactionCanceledException } from "@aws-sdk/client-dynamodb";
 
 const ajv = new Ajv();
 const roleSchema = (schema.definitions as Record<string, object>)["Role"];
@@ -56,6 +57,16 @@ export const handler = async (
     );
     return response(201, { message: "Role added", data: role });
   } catch (err) {
+    if ((err as Error).name === "TransactionCancelledException") {
+      const reasons = (err as TransactionCanceledException).CancellationReasons ??
+      [];
+      if (reasons[0]?.Code === "ConditionCheckFailed") {
+        return response(404, { message: `Movie ${role.movieId} not found`});
+      }
+      if (reasons[1]?.Code === "ConditionCheckFailed") {
+        return response(404, {message: `Actor ${role.actorId} not found`});
+      }
+    }
     console.error("DynamoDB error:", err);
     return response(500, {
       message: "Internal server error"
