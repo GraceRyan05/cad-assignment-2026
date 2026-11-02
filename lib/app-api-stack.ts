@@ -92,6 +92,8 @@ export class AppApiStack extends cdk.Stack {
       authorizer: userAuthorizer,
       authorizationType: apig.AuthorizationType.CUSTOM,
     };
+
+    const adminAuth: apig.MethodOptions = { apiKeyRequired: true };
     // Routes
     const moviesResource = api.root.addResource('movies');
 
@@ -100,7 +102,7 @@ export class AppApiStack extends cdk.Stack {
     //Protect the movieRolesResource with userAuth
     movieRolesResource.addMethod('GET', new apig.LambdaIntegration(getMovieRolesFn), userAuth);
 
-    moviesResource.addResource('roles').addMethod('POST', new apig.LambdaIntegration(addMovieRoleFn));
+    moviesResource.addResource('roles').addMethod('POST', new apig.LambdaIntegration(addMovieRoleFn), adminAuth);
 
     api.root
       .addResource('actors')
