@@ -111,6 +111,8 @@ export class AppApiStack extends cdk.Stack {
     });
     usagePlan.addApiKey(adminApiKey);
 
+    new cdk.CfnOutput(this, 'AdminApiKeyId', { value: adminApiKey.keyId });
+
     api.root
       .addResource('actors')
       .addResource('{actorID}')
