@@ -49,7 +49,8 @@ export const handler = async (
         {
           Put: {
             TableName: tableName,
-            Item: { PK: movieKey(role.movieId), SK: actorKey(role.actorId), ...role}
+            Item: { PK: movieKey(role.movieId), SK: actorKey(role.actorId), ...role},
+            ConditionExpression: "attribute_not_exists(PK)",
           },
         },
         ],
@@ -65,6 +66,11 @@ export const handler = async (
       }
       if (reasons[1]?.Code === "ConditionCheckFailed") {
         return response(404, {message: `Actor ${role.actorId} not found`});
+      }
+      if (reasons[2]?.Code === "ConditionalCheckFailed") {
+        return response(409, {
+          message: `Actor ${role.actorId} already has a role in movie ${role.movieId}`,
+        });
       }
     }
     console.error("DynamoDB error:", err);
