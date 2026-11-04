@@ -53,6 +53,15 @@ export const handler = async (
           data: {...actor, roleDescription: roleResult.Item.roleDescription},
         });
       }
+      const movieResult = await ddb.send(
+        new GetCommand({
+          TableName: tableName,
+          Key: { PK: movieKey(movieId), SK: movieKey(movieId) },
+        })
+      );
+      if (!movieResult.Item) {
+        return response(404, {message: `Movie ${movieId} not found`});
+      }
     }
     return response(200, {data: actor});
 
