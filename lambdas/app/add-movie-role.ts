@@ -6,6 +6,7 @@ import { logRequest } from "../shared/request-logger";
 import Ajv from "ajv";
 import schema from "../shared/types.schema.json";
 import type { TransactionCanceledException } from "@aws-sdk/client-dynamodb";
+import { parseId } from "../shared/db";
 
 const ajv = new Ajv();
 const roleSchema = (schema.definitions as Record<string, object>)["Role"];
@@ -24,6 +25,10 @@ export const handler = async (
       message: "Incorrect type. Must match the role schema",
       schema: roleSchema,
     });
+  }
+
+  if (parseId(String(body.movieId)) === undefined || parseId(String(body.actorId)) === undefined) {
+    return response(400, {message: "movieId and actorId must be positive integers"});
   }
   const role = toRole(body);
 
