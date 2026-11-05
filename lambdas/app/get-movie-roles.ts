@@ -11,7 +11,7 @@ import {
   tableName,
   toRole,
 } from "../shared/db";
-import { response } from "../shared/http";
+import { optionalIdParam, response } from "../shared/http";
 import { logRequest } from "../shared/request-logger";
 
 export const handler = async (
@@ -24,12 +24,9 @@ export const handler = async (
     return response(400, { message: "movieID must be a positive integer" });
   }
   
-  //invalid actor query parameter logic
-  const actorParameter = event.queryStringParameters?.actor;
-  const actorId = parseId(actorParameter);
-  if (actorParameter !== undefined && actorId === undefined) {
-    return response (400, { message: "Actor must be a positive integer"});
-  }
+  const actorId = optionalIdParam(event, "actor");
+  if (typeof actorId === "object") return actorId; 
+
 
   try {
     const queryResult = await ddb.send(

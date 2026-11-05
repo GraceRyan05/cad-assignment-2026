@@ -8,7 +8,7 @@ import {
   tableName,
   toActor,
 } from "../shared/db";
-import { response } from "../shared/http";
+import { optionalIdParam, response } from "../shared/http";
 import { logRequest } from "../shared/request-logger";
 
 export const handler = async (
@@ -21,11 +21,9 @@ export const handler = async (
     return response(400, { message: "actorID must be a positive integer" });
   }
 
-  const movieParam = event.queryStringParameters?.movie;
-  const movieId = parseId(movieParam);
-  if (movieParam !== undefined && movieId === undefined) {
-    return response(400, { message: "movie must be a positive integer" });
-  }
+  const movieId = optionalIdParam(event, "movie");
+  if (typeof movieId === "object") return movieId;
+  
   try {
     const actorResult = await ddb.send(
       new GetCommand({
