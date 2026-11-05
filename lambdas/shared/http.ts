@@ -1,4 +1,5 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { parseId } from './model';
 
 export const response = (
   statusCode: number,
@@ -26,4 +27,13 @@ export const parseJsonObject = (
     return response(400, { message: 'Request body must be a JSON object' });
   }
   return body as Record<string, unknown>;
+};
+
+export const optionalIdParam = (
+  event: APIGatewayProxyEvent,
+  name: string,
+): number | undefined | APIGatewayProxyResult => {
+  const value = event.queryStringParameters?.[name];
+  if (value === undefined) return undefined;
+  return parseId(value) ?? response(400, { message: `${name} must be a positive integer` });
 };
